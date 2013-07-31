@@ -25,7 +25,7 @@ class Worker(ConsumerMixin):
         if not self._loaded_handlers:
             from django_kombu.settings import kombu_settings, perform_import
             for q in kombu_settings.QUEUES:
-                for handler_cls in perform_import(q[2]):
+                for handler_cls in perform_import(q[2], 'QUEUE'):
                     self.add_handler(q[0], handler_cls())
             self._loaded_handlers = True
 
@@ -44,18 +44,18 @@ class Worker(ConsumerMixin):
                 try:
                     handler.handle(*args)
                 except:
-                    _logger.error(traceback.format_exc())
+                    logger.error(traceback.format_exc())
                 else:
-                    _logger.info('SUCCESS: %(routing_key)s %(body)s' % dict(
+                    logger.info('SUCCESS: %(routing_key)s %(body)s' % dict(
                         body        = args[0],
                         routing_key = args[1].delivery_info['routing_key']
                     ))
 
     def on_connection_error(self, exc, interval):
-        _logger.error('Broker connection error: %r. Trying again in %s seconds.', exc, interval)
+        logger.error('Broker connection error: %r. Trying again in %s seconds.', exc, interval)
 
     def on_decode_error(self, message, exc):
-        _logger.error("Can't decode message body: %r (type:%r encoding:%r raw:%r')",
+        logger.error("Can't decode message body: %r (type:%r encoding:%r raw:%r')",
               exc, message.content_type, message.content_encoding,
               safe_repr(message.body)
         )

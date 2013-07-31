@@ -24,6 +24,11 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.utils import importlib
 
+# Try to import six from Django, fallback to included `six`.
+try:
+    from django.utils import six
+except ImportError:
+    from django_kombu import six
 
 
 USER_SETTINGS = getattr(settings, 'DJ_KOMBU', None)
@@ -111,7 +116,7 @@ class KombuSettings(object):
     def validate_setting(self, attr, val):
         if attr == 'QUEUES':
             for q in val:
-                perform_import(q[2])
+                perform_import(q[2], attr)
 
 
 kombu_settings = KombuSettings(USER_SETTINGS, DEFAULTS, IMPORT_STRINGS)
