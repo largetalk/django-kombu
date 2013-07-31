@@ -32,7 +32,7 @@ class Worker(ConsumerMixin):
         super(Worker, self).run()
 
     def get_consumers(self, Consumer, channel):
-        callbacks = [ partial(self.dispatch_message, queue = q.name) for q in task_queues ]
+        callbacks = [ partial(self.dispatch_message, q.name) for q in task_queues ]
 
         return [
             Consumer(queues=q, callbacks=[cb]) for q, cb in zip(task_queues, callbacks)
