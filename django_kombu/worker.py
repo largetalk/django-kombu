@@ -18,7 +18,7 @@ class Worker(ConsumerMixin):
         self.connection = connection
 
     def get_consumers(self, Consumer, channel):
-        return [ Consumer(queues=q_h[0], callbacks=[q_h[1]]) for q_h in queue_handle_pairs ]
+        return [ Consumer(queues=q_h[0], callbacks=q_h[1]) for q_h in queue_handle_pairs ]
 
     #def process_task(self, body, message):
     #    fun = body['fun']

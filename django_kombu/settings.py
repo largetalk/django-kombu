@@ -3,7 +3,7 @@ Settings for REST framework are all namespaced in the DJ_KOMBU setting.
 For example your project's `settings.py` file might look like this:
 
 DJ_KOMBU = {
-    'TRANSPORT': 'amqp://guest:guest@localhost:5672',
+    'TRANSPORT': 'amqp://guest:guest@localhost:5672//',
     'EXCHANGE': {
         'name': 'tasks',
         'type': 'topic',
@@ -11,7 +11,7 @@ DJ_KOMBU = {
         'auto_delete': False,
     },
     'QUEUES': (
-        ('test_queue', 'test.*', 'django_kombu.tasks.print_test')
+        ('test_queue', 'test.*', ['django_kombu.tasks.print_test',])
     )
 }
 
@@ -29,7 +29,7 @@ from django.utils import importlib
 USER_SETTINGS = getattr(settings, 'DJ_KOMBU', None)
 
 DEFAULTS = {
-    'TRANSPORT': 'amqp://guest:guest@localhost:5672',
+    'TRANSPORT': 'amqp://guest:guest@localhost:5672//',
     'EXCHANGE': {
         'name': 'tasks',
         'type': 'topic',
@@ -37,7 +37,7 @@ DEFAULTS = {
         'auto_delete': False,
     },
     'QUEUES': (
-        ('test_queue', 'test.*', 'django_kombu.tasks.print_test')
+        ('test_queue', 'test.*', ['django_kombu.tasks.print_test',])
     )
 }
 
