@@ -102,9 +102,16 @@ class KombuSettings(object):
             # Fall back to defaults
             val = self.defaults[attr]
 
+        self.validate_setting(attr, val)
+
         # Cache the result
         setattr(self, attr, val)
         return val
+
+    def validate_setting(self, attr, val):
+        if attr == 'QUEUES':
+            for q in val:
+                perform_import(q[2])
 
 
 kombu_settings = KombuSettings(USER_SETTINGS, DEFAULTS, IMPORT_STRINGS)

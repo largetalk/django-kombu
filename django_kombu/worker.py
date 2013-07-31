@@ -16,9 +16,20 @@ class Worker(ConsumerMixin):
     def __init__(self, connection):
         self.connection = connection
         self.handlers = collections.defaultdict(list)
+        self._loaded_handlers = False
 
     def add_handler(self, queue, handler):
         self.handlers[queue].append(handler)
+
+    def run(self):
+        if not self._loaded_handlers:
+            from django_kombu.settings import kombu_settings, perform_import
+            for q in kombu_settings.QUEUES:
+                for handler_cls in perform_import(q[2]):
+                    self.add_handler(q[0], handler_cls())
+            self._loaded_handlers = True
+
+        super(Worker, self).run()
 
     def get_consumers(self, Consumer, channel):
         callbacks = [ partial(self.dispatch_message, queue = q.name) for q in task_queues ]
