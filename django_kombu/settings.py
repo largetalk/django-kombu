@@ -11,12 +11,12 @@ DJ_KOMBU = {
         'auto_delete': False,
     },
     'QUEUES': (
-        ('test_queue', 'test.*', ['django_kombu.tasks.print_test',])
+        ('test_queue', 'test.*', ['django_kombu.tasks.PrintTestHandler',]),
     )
 }
 
-This module provides the `api_setting` object, that is used to access
-REST framework settings, checking for user settings first, then falling
+This module provides the `kombu_setting` object, that is used to access
+django-kombu settings, checking for user settings first, then falling
 back to the defaults.
 """
 from __future__ import unicode_literals
@@ -37,7 +37,7 @@ DEFAULTS = {
         'auto_delete': False,
     },
     'QUEUES': (
-        ('test_queue', 'test.*', ['django_kombu.tasks.print_test',])
+        ('test_queue', 'test.*', ['django_kombu.tasks.PrintTestHandler',]),
     )
 }
 

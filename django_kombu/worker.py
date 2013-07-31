@@ -6,30 +6,48 @@ from kombu.utils import kwdict, reprcall
 
 from kombu import Exchange, Queue
 from django_kombu.connection import default_exchange, task_queues
-from django_kombu.connection import queue_handle_pairs
 
+from functools import partial
+import collections
 
 logger = get_logger(__name__)
 
-
 class Worker(ConsumerMixin):
-
     def __init__(self, connection):
         self.connection = connection
+        self.handlers = collections.defaultdict(list)
+
+    def add_handler(self, queue, handler):
+        self.handlers[queue].append(handler)
 
     def get_consumers(self, Consumer, channel):
-        return [ Consumer(queues=q_h[0], callbacks=q_h[1]) for q_h in queue_handle_pairs ]
+        callbacks = [ partial(self.dispatch_message, queue = q.name) for q in task_queues ]
 
-    #def process_task(self, body, message):
-    #    fun = body['fun']
-    #    args = body['args']
-    #    kwargs = body['kwargs']
-    #    logger.info('Got task: %s', reprcall(fun.__name__, args, kwargs))
-    #    try:
-    #        fun(*args, **kwdict(kwargs))
-    #    except Exception, exc:
-    #        logger.error('task raised exception: %r', exc)
-    #    message.ack()
+        return [
+            Consumer(queues=q, callbacks=[cb]) for q, cb in zip(task_queues, callbacks)
+        ]
+
+    def dispatch_message(self, queue, *args):
+        for handler in self.handlers[queue]:
+            if handler.match(*args):
+                try:
+                    handler.handle(*args)
+                except:
+                    _logger.error(traceback.format_exc())
+                else:
+                    _logger.info('SUCCESS: %(routing_key)s %(body)s' % dict(
+                        body        = args[0],
+                        routing_key = args[1].delivery_info['routing_key']
+                    ))
+
+    def on_connection_error(self, exc, interval):
+        _logger.error('Broker connection error: %r. Trying again in %s seconds.', exc, interval)
+
+    def on_decode_error(self, message, exc):
+        _logger.error("Can't decode message body: %r (type:%r encoding:%r raw:%r')",
+              exc, message.content_type, message.content_encoding,
+              safe_repr(message.body)
+        )
 
 if __name__ == '__main__':
     from kombu import Connection
