@@ -3,8 +3,8 @@ from django.core.management.base import BaseCommand, CommandError
 
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
-        make_option('--level', '-l', dest='level',
-            help="log level"),
+        make_option('--daemon', '-d', dest='daemon',
+            help="run as daemon"),
     )
     help = "kombu worker"
 

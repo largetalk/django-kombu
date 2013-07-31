@@ -5,7 +5,7 @@ from kombu.log import get_logger
 from kombu.utils import kwdict, reprcall
 
 from kombu import Exchange, Queue
-from django_kombu.connection import default_exchange, task_queues
+from django_kombu.connection import default_connection, task_queues
 
 from functools import partial
 import collections
@@ -59,6 +59,8 @@ class Worker(ConsumerMixin):
               exc, message.content_type, message.content_encoding,
               safe_repr(message.body)
         )
+
+global_worker = Worker(default_connection)
 
 if __name__ == '__main__':
     from kombu import Connection
