@@ -9,7 +9,10 @@ DJ_KOMBU = {
         'type': 'topic',
         'durable': True,
         'auto_delete': False,
-    }
+    },
+    'QUEUES': (
+        ('test_queue', 'test.*', 'django_kombu.tasks.print_test')
+    )
 }
 
 This module provides the `api_setting` object, that is used to access
@@ -32,7 +35,10 @@ DEFAULTS = {
         'type': 'topic',
         'durable': True,
         'auto_delete': False,
-    }
+    },
+    'QUEUES': (
+        ('test_queue', 'test.*', 'django_kombu.tasks.print_test')
+    )
 }
 
 
