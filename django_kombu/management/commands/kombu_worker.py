@@ -6,9 +6,8 @@ from django.core.management.base import BaseCommand
 
 try:
     from daemon import DaemonContext as fork_process
+    fork_process.__daemon__ = True
 except ImportError:
-    warn('\'python-daemon\' not found, using \'pip install python-daemon\' to install.')
-    
     @contextmanager
     def fork_process(): yield
 
@@ -30,6 +29,8 @@ class Command(BaseCommand):
             print 'Quit the worker with %s' % quit_command
 
             if options.get('daemon'):
+                if not hasattr(fork_process, '__daemon__'):
+                    warn('\'python-daemon\' not found, using \'pip install python-daemon\' to install.')
                 with fork_process():
                     global_worker.run()
             else:
