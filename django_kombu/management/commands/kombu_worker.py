@@ -1,4 +1,5 @@
 from sys import platform
+from warnings import warn
 from contextlib import contextmanager
 from optparse import make_option
 from django.core.management.base import BaseCommand
@@ -6,6 +7,8 @@ from django.core.management.base import BaseCommand
 try:
     from daemon import DaemonContext as fork_process
 except ImportError:
+    warn('\'python-daemon\' not found, using \'pip install python-daemon\' to install.')
+    
     @contextmanager
     def fork_process(): yield
 
