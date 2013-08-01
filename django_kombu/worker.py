@@ -3,12 +3,13 @@ from __future__ import with_statement
 from kombu.mixins import ConsumerMixin
 from kombu.log import get_logger
 from kombu.utils import kwdict, reprcall
+from kombu.utils.encoding import safe_repr
 
 from kombu import Exchange, Queue
 from django_kombu.connection import default_connection, task_queues
 
 from functools import partial
-import collections
+import collections, traceback
 
 logger = get_logger(__name__)
 
