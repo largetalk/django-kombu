@@ -6,7 +6,7 @@ so django-kombu is a utility for product message, comsume message in django
 
 install:
 
-    pip install -e https://github.com/largetalk/django-kombu.git#egg=django_kombu
+    pip install -e git+https://github.com/largetalk/django-kombu.git#egg=django_kombu
 
 settings:
 
