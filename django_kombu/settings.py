@@ -1,5 +1,5 @@
 """
-Settings for REST framework are all namespaced in the DJ_KOMBU setting.
+Settings for django-kombu are all namespaced in the DJ_KOMBU setting.
 For example your project's `settings.py` file might look like this:
 
 DJ_KOMBU = {
@@ -83,10 +83,6 @@ def import_from_string(val, setting_name):
 class KombuSettings(object):
     """
     A settings object, that allows API settings to be accessed as properties.
-    For example:
-
-        from rest_framework.settings import api_settings
-        print api_settings.DEFAULT_RENDERER_CLASSES
 
     Any setting with string import paths will be automatically resolved
     and return the class, rather than the string literal.

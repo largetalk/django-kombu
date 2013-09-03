@@ -123,6 +123,18 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
 )
 
+DJ_KOMBU = {
+    'TRANSPORT': 'amqp://guest:guest@172.16.21.24:5672//',
+    'EXCHANGE': {
+        'name': 'tasks',
+        'type': 'topic',
+        'durable': True,
+        'auto_delete': False,
+    },
+    'QUEUES': (
+        ('test_queue', 'test.*', ['django_kombu.tasks.PrintTestHandler',]),
+    )
+}
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.

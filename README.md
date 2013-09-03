@@ -4,6 +4,8 @@ Celery is cool, but it couldn't use to switch messages between system, with diff
 
 so django-kombu is a utility for product message, comsume message in django
 
+ps. librabbitmq >= 2.5.14
+
 install:
 
     pip install -e git+https://github.com/largetalk/django-kombu.git#egg=django_kombu
