@@ -1,4 +1,8 @@
 from __future__ import with_statement
+import gevent
+import gevent.monkey
+gevent.monkey.patch_all()
+from gevent.pool import Pool
 
 from kombu.mixins import ConsumerMixin
 from kombu.log import get_logger
@@ -18,6 +22,7 @@ class Worker(ConsumerMixin):
         self.connection = connection
         self.handlers = collections.defaultdict(list)
         self._loaded_handlers = False
+        self._pool = Pool(5) #pool size
 
     def add_handler(self, queue, handler):
         self.handlers[queue].append(handler)
@@ -43,7 +48,8 @@ class Worker(ConsumerMixin):
         for handler in self.handlers[queue]:
             if handler.match(*args):
                 try:
-                    handler.handle(*args)
+                    self._pool.spawn(lambda : handler.handle(*args))
+                    #handler.handle(*args)
                 except:
                     logger.error(traceback.format_exc())
                 else:

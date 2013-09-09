@@ -153,7 +153,7 @@ LOGGING = {
 }
 
 DJ_KOMBU = {
-    'TRANSPORT': 'amqp://guest:guest@172.16.21.24:5672//',
+    'TRANSPORT': 'amqp://guest:guest@172.16.97.12:5672//',
     'EXCHANGE': {
         'name': 'tasks',
         'type': 'topic',
@@ -161,6 +161,7 @@ DJ_KOMBU = {
         'auto_delete': False,
     },
     'QUEUES': (
-        ('test_queue', 'test.*', ['django_kombu.tasks.PrintTestHandler',]),
+        #('test_queue', 'test.*', ['django_kombu.tasks.PrintTestHandler',]),
+        ('slow_queue', 'test.*', ['main.tasks.SlowPrintTestHandler',]),
     )
 }

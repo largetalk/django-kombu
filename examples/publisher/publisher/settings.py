@@ -124,7 +124,7 @@ INSTALLED_APPS = (
 )
 
 DJ_KOMBU = {
-    'TRANSPORT': 'amqp://guest:guest@172.16.21.24:5672//',
+    'TRANSPORT': 'amqp://guest:guest@172.16.97.12:5672//',
     'EXCHANGE': {
         'name': 'tasks',
         'type': 'topic',
