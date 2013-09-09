@@ -153,6 +153,7 @@ LOGGING = {
 }
 
 DJ_KOMBU = {
+    'GEVENT': True,
     'TRANSPORT': 'amqp://guest:guest@172.16.97.12:5672//',
     'EXCHANGE': {
         'name': 'tasks',

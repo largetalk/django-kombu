@@ -3,6 +3,7 @@ Settings for django-kombu are all namespaced in the DJ_KOMBU setting.
 For example your project's `settings.py` file might look like this:
 
 DJ_KOMBU = {
+    'GEVENT': False,
     'TRANSPORT': 'amqp://guest:guest@localhost:5672//',
     'EXCHANGE': {
         'name': 'tasks',
@@ -34,6 +35,7 @@ except ImportError:
 USER_SETTINGS = getattr(settings, 'DJ_KOMBU', None)
 
 DEFAULTS = {
+    'GEVENT': False,
     'TRANSPORT': 'amqp://guest:guest@localhost:5672//',
     'EXCHANGE': {
         'name': 'tasks',

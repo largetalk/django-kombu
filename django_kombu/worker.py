@@ -1,8 +1,12 @@
 from __future__ import with_statement
-import gevent
-import gevent.monkey
-gevent.monkey.patch_all()
-from gevent.pool import Pool
+from django_kombu.settings import kombu_settings
+if kombu_settings.GEVENT:
+    import gevent
+    import gevent.monkey
+    gevent.monkey.patch_all()
+    from gevent.pool import Pool
+else:
+    from multiprocessing.pool import ThreadPool as Pool
 
 from kombu.mixins import ConsumerMixin
 from kombu.log import get_logger
@@ -48,7 +52,10 @@ class Worker(ConsumerMixin):
         for handler in self.handlers[queue]:
             if handler.match(*args):
                 try:
-                    self._pool.spawn(lambda : handler.handle(*args))
+                    if kombu_settings.GEVENT:
+                        self._pool.spawn(lambda : handler.handle(*args))
+                    else:
+                        self._pool.apply_async(lambda : handler.handle(*args))
                     #handler.handle(*args)
                 except:
                     logger.error(traceback.format_exc())
